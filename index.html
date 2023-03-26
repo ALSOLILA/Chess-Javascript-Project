@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>♛ Chess Academy ♛</title>
+    <script src="https://kit.fontawesome.com/c14577e462.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+<div id="header"></div>
+<div id="main"></div>
+ 
+
+<!-- tactics random image -->
+<div id="tactics">
+  
+    <div id="inner_container">
+       <h2>Try to Solve Tactics</h2>
+      <img src="/assets/image/1.jpg" id="image_shower">
+    </div>
+    <div id="button_container">
+      <button onclick="get_random_image()">♔ Click for random tactics</button>
+    </div>
+  </div>
+
+  <!-- form section Api --> 
+  
+  <h1 id="chess_statics">Chess Players Statistics</h1>
+  <form id="form">
+    <label for="search-input">Search for player:</label>
+    <input type="text" id="search-input">
+    <button type="button" id="search-btn">Search</button>
+    <button type="button" id="btn">Show Data</button>
+    <button type="button" id="hide">Hide Data</button>
+  </form>
+
+
+
+  <div id="containerapi"></div>
+
+  <div id="footer"></div>
+  
+  <script>
+    const image_array = [
+      '1.jpg',
+      '2.jpg',
+      '3.jpg',
+      '4.jpg',
+      '5.jpg',
+      '6.jpg',
+      '7.jpg'
+    ];
+  
+    function get_random_image() {
+      const random_index = Math.ceil(Math.random() * image_array.length);
+      const selected_image = image_array[random_index];
+      document.getElementById('image_shower').src = `/assets/image/${selected_image}`;
+    }
+
+    showQuestions(questions, quizContainer);
+    
+  </script>
+<!-- here ends tactics random image -->
+
+
+
+
+<script type="module">
+
+import {Header} from './components/Header.js';
+import {Main} from './components/Main.js';
+import {Footer} from './components/Footer.js'
+document.getElementById('header').innerHTML = Header();
+document.getElementById('main').innerHTML = Main();
+document.getElementById('footer').innerHTML = Footer();
+
+const buttonChessPlayer= document.getElementById('btn')
+    const hideData=document.getElementById('hide');
+
+    const getChessApi = () => {
+      fetch(`https://api.chess.com/pub/leaderboards/`)
+        .then(response => response.json())
+        .then(json => {
+          const topPlayers = json.live_blitz.slice(0, 30);
+          const containerapi = document.getElementById('containerapi');
+          containerapi.innerHTML = '';
+          topPlayers.forEach(player => {
+            const card = createPlayerCard(player);
+            containerapi.appendChild(card);
+          });
+        });
+    };
+
+    buttonChessPlayer.onclick= () => getChessApi();
+
+    hideData.addEventListener('click', () => {
+  const container = document.getElementById('containerapi');
+  if (containerapi.style.display === 'none') {
+    containerapi.style.display = 'block';
+    getChessApi(); // fetch and display players again if the container was hidden before
+  } else {
+    containerapi.style.display = 'none';
+  }
+});
+
+    const createPlayerCard = (player) => {
+      const card = document.createElement('div');
+      card.classList.add('card');
+
+      const name = document.createElement('h2');
+      name.textContent = player.name;
+
+      const avatar = document.createElement('img');
+      avatar.src = player.avatar;
+
+      const rank = document.createElement('p');
+      rank.textContent = `Rank: ${player.rank}`;
+
+      const score = document.createElement('p');
+      score.textContent = `Score: ${player.score}`;
+
+      card.appendChild(name);
+      card.appendChild(avatar);
+      card.appendChild(rank);
+      card.appendChild(score);
+
+      return card;
+    };
+
+    const searchBtn = document.getElementById('search-btn');
+    searchBtn.addEventListener('click', () => {
+      const searchInput = document.getElementById('search-input');
+      const playerName = searchInput.value.trim();
+      if (playerName) {
+        fetch(`https://api.chess.com/pub/leaderboards/?title=${playerName}`)
+          .then(response => response.json())
+          .then(json => {
+            const player = json.live_blitz.find(p => p.name.toLowerCase() === playerName.toLowerCase());
+            const container = document.getElementById('containerapi');
+            container.innerHTML = '';
+            if (player) {
+              const card = createPlayerCard(player);
+              container.appendChild(card);
+            } 
+          });
+      }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</body>
+</html>

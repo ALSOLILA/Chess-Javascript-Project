@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+</head>
+<body>
+    <style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+		}
+		
+		form {
+			background-color: #ffffff;
+			padding: 20px;
+			margin: 20px auto;
+			max-width: 400px;
+			box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+		}
+		
+		h1 {
+			text-align: center;
+			margin-top: 0;
+		}
+		
+		label {
+			display: block;
+			margin-bottom: 10px;
+			font-weight: bold;
+		}
+		
+		input[type="text"],
+		input[type="password"] {
+			display: block;
+			width: 100%;
+			padding: 10px;
+			margin-bottom: 20px;
+			border: none;
+			border-radius: 5px;
+			box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+		}
+		
+		input[type="submit"] {
+			background-color: #4CAF50;
+			color: #ffffff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.2s ease;
+		}
+		
+		input[type="submit"]:hover {
+			background-color: #3e8e41;
+		}
+		
+		.error {
+			color: #ff0000;
+			font-weight: bold;
+			margin-bottom: 10px;
+		}
+	</style>
+</head>
+<body>
+	<form name="myForm" id="form">
+		<h1>Login Form</h1>
+		<label for="username">Username:</label>
+		<input type="text" id="username" name="username" placeholder="Enter your username" required>
+		<label for="password">Password:</label>
+		<input type="password" id="password" name="password" placeholder="Enter your password" required>
+		<input type="submit" value="Submit">
+		<div class="error" id="error"></div>
+	</form>
+	<script>
+		var form = document.getElementById('form');
+		var error = document.getElementById("error");
+		form.addEventListener("submit", function(event) {
+			var username = form["username"].value;
+			var password = form["password"].value;
+			if (username == "Admin" && password == "Admin") {
+				// The username and password are correct, so allow the form to submit and redirect to index.html
+				form.action = "index.html";
+				return true;
+			} else {
+				// The username and/or password are incorrect, so display an error message and prevent the form from submitting
+				error.innerHTML = "Invalid username or password";
+				event.preventDefault();
+			}
+		});
+	</script>
+</body>
+</html>
